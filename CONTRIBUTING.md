@@ -335,7 +335,13 @@ Contributors are recognized in:
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the same [MIT License](LICENSE.md) that covers this project.
+By contributing, you agree that your contributions will be licensed under the same [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE.md) license that covers this project.
+
+This means:
+- Your contributions can be used for non-commercial purposes
+- Commercial use requires separate licensing
+- Derivatives must use the same license
+- Attribution is required
 
 ---
 

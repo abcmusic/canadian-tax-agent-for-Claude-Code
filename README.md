@@ -1,7 +1,7 @@
 # Canadian Tax Agent: Personal & Corporate
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/SoftTouch/canadian-tax-agent/releases)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-orange.svg)](LICENSE.md)
 [![Tax Years](https://img.shields.io/badge/tax%20years-2024--2025-orange.svg)](CHANGELOG.md)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)](#requirements)
 
@@ -210,10 +210,26 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## 📝 License
 
-This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) for details.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)** License.
+
+**You are free to:**
+- ✅ Use for personal tax preparation
+- ✅ Use for educational purposes
+- ✅ Share and modify (under same license)
+- ✅ Use in non-profit organizations
+
+**Restrictions:**
+- ❌ Commercial use prohibited (cannot sell or use in paid services)
+- ❌ Must attribute SoftTouch and contributors
+- ❌ Derivatives must use same license
+
+**Commercial Licensing:** For commercial use, contact licensing@softtouch.dev
+
+See [LICENSE.md](LICENSE.md) for complete terms and permitted uses.
 
 ### Third-Party Licenses
 
+Third-party dependencies retain their original licenses (MIT):
 - pdf-lib: MIT License
 - pdf-form-filler: MIT License
 - zod: MIT License

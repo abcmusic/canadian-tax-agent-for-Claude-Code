@@ -14,18 +14,18 @@
     "personal-tax",
     "corporate-tax"
   ],
-  "homepage": "https://github.com/anthropics/claude-code",
+  "homepage": "https://github.com/SoftTouch/canadian-tax-agent",
   "bugs": {
-    "url": "https://github.com/anthropics/claude-code/issues"
+    "url": "https://github.com/SoftTouch/canadian-tax-agent/issues"
   },
-  "license": "MIT",
-  "author": "Tax Expert Team",
+  "license": "CC-BY-NC-SA-4.0",
+  "author": "SoftTouch",
   "contributors": [
-    "Canadian Tax Expert System Contributors"
+    "SoftTouch Contributors"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/anthropics/claude-code.git"
+    "url": "https://github.com/SoftTouch/canadian-tax-agent.git"
   },
   "engines": {
     "node": ">=16.0.0",
