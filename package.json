@@ -1,0 +1,111 @@
+{
+  "name": "canadian-tax-expert",
+  "version": "1.0.0",
+  "description": "Comprehensive Canadian tax preparation system for Claude Code. Automate T1 (personal) and T2 (corporate) tax returns with CRA-compliant calculations, form completion, and tax optimization strategies.",
+  "keywords": [
+    "canadian-tax",
+    "cra",
+    "tax-preparation",
+    "t1",
+    "t2",
+    "claude-code",
+    "tax-optimization",
+    "ccpc",
+    "personal-tax",
+    "corporate-tax"
+  ],
+  "homepage": "https://github.com/anthropics/claude-code",
+  "bugs": {
+    "url": "https://github.com/anthropics/claude-code/issues"
+  },
+  "license": "MIT",
+  "author": "Tax Expert Team",
+  "contributors": [
+    "Canadian Tax Expert System Contributors"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/claude-code.git"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdf-form-filler": "^2.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.11"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest tests/tax-expert/unit",
+    "test:e2e": "jest tests/tax-expert/e2e",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/tests"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(spec|test).ts"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "lib/**/*.ts",
+      "!lib/**/*.d.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
+  },
+  "files": [
+    "skills/",
+    "sdk/",
+    "workspace/",
+    "docs/",
+    "install.sh",
+    "install.ps1",
+    "install-manual.md",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE.md"
+  ],
+  "taxYearsSupported": [
+    "2024",
+    "2025"
+  ],
+  "skillsIncluded": [
+    "canadian-tax-expert-personal-t1",
+    "canadian-tax-expert-corporate-t2",
+    "canadian-tax-expert-form-completion",
+    "canadian-tax-expert-tax-optimization",
+    "canadian-tax-expert-tax-rules-updater"
+  ],
+  "privacy": {
+    "localOnly": true,
+    "noCloudUploads": true,
+    "encryptedFields": [
+      "sin",
+      "businessNumber"
+    ]
+  },
+  "releaseDate": "2026-01-01",
+  "nextUpdate": "2026-11-01"
+}
