@@ -24,6 +24,51 @@ The system has specialized agents that leverage the use of AskUserQuestion tool 
 - **Auto-Update:** Fetch latest CRA rules and rates automatically each tax season
 - **Privacy-First:** All data stays local, no CRA API, encrypted SIN/Business Number
 
+### CRA Forms Completed by the Agent
+
+**Personal Tax (T1) Forms:**
+- T1 General - Canadian Income Tax Return
+- Schedule 1 - Federal Tax
+- Schedule 2 - Federal Amounts Transferred from Spouse
+- Schedule 3 - Capital Gains or Losses
+- Schedule 4 - Statement of Investment Income
+- Schedule 5 - Amounts for Spouse or Common-Law Partner and Dependants
+- Schedule 6 - Canada Workers Benefit
+- Schedule 7 - RRSP Unused Contributions, Transfers, and HBP/LLP Activities
+- Schedule 8 - CPP Contributions and Overpayment
+- Schedule 9 - Donations and Gifts
+- Schedule 11 - Federal Tuition, Education, and Textbook Amounts
+- Schedule 12 - Home Accessibility Expenses
+- Provincial Tax Forms (all 13 provinces/territories)
+
+**Corporate Tax (T2) Forms:**
+- T2 Corporation Income Tax Return
+- Schedule 1 - Net Income (Loss) for Income Tax Purposes
+- Schedule 2 - Charitable Donations and Gifts
+- Schedule 3 - Dividends Paid, Payable, and Allocated
+- Schedule 4 - Corporation Loss Continuity and Application
+- Schedule 5 - Tax Calculation Supplementary - Corporations
+- Schedule 6 - Summary of Dispositions of Capital Property
+- Schedule 7 - Aggregate Investment Income and Income Eligible for SBD
+- Schedule 8 - Capital Cost Allowance (CCA)
+- Schedule 50 - Shareholder Information
+- Schedule 125 - Income Statement Information
+- GIFI (General Index of Financial Information) - Financial Statements
+
+**Payroll & Investment Income Slips:**
+- T4 - Statement of Remuneration Paid
+- T4 Summary - Summary of Remuneration Paid
+- T4A - Statement of Pension, Retirement, Annuity, and Other Income
+- T4A Summary
+- T5 - Statement of Investment Income
+- T5 Summary - Summary of Investment Income
+
+**Other Supporting Forms:**
+- T2200 - Declaration of Conditions of Employment (for employment expense claims)
+- T2125 - Statement of Business or Professional Activities
+- T776 - Statement of Real Estate Rentals
+- RC383 - Tax-Free Savings Account (TFSA) Return
+
 ## 📦 What's Included
 
 ### Skills (5)
