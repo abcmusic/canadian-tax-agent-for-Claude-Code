@@ -39,41 +39,13 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "typescript": "^5.3.3",
-    "jest": "^29.7.0",
-    "@types/jest": "^29.5.11"
+    "vitest": "^1.2.0"
   },
   "scripts": {
-    "test": "jest",
-    "test:unit": "jest tests/tax-expert/unit",
-    "test:e2e": "jest tests/tax-expert/e2e",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/tests"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.ts",
-      "**/?(*.)+(spec|test).ts"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "lib/**/*.ts",
-      "!lib/**/*.d.ts"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 90,
-        "lines": 90,
-        "statements": 90
-      }
-    }
+    "test": "vitest run",
+    "test:unit": "vitest run tests/tax-expert/unit",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "files": [
     "skills/",
