@@ -9,6 +9,10 @@
 
 Automate T1 (personal) and T2 (corporate) tax returns with CRA-compliant calculations, form completion, and tax optimization strategies. Built for privacy-conscious Canadians who want full control over their tax data.
 
+The system has specialized agents that leverage the use of AskUserQuestion tool to be thorough at every stage of the process, making sure that your returns are complete while minimizing your tax burden and increasing your returns as much as possible - legally.
+
+*Note* This is NOT a replacement for a professional tax professional, and the system and developers make no claims for accuracy and accept no responsibility or liability for errors arising from the use of these tools.  ALWAYS consult a professional for accuracy and legal compliance.
+
 ---
 
 ## 🌟 Features
