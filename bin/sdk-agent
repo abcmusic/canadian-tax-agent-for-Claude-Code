@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+/**
+ * SDK Agent CLI
+ *
+ * Usage: sdk-agent <agent-type> "<task>" [--tools file,browser,n8n]
+ *
+ * Spawns an agent with optimized MCP loading.
+ */
+
+import { runWithMCP } from '../lib/mcp-bridge.js';
+import { agents } from '../lib/config.js';
+
+const args = process.argv.slice(2);
+
+if (args.length < 2) {
+  console.log('Usage: sdk-agent <agent-type> "<task>" [--tools file,browser,n8n]');
+  console.log('');
+  console.log('Agent types: coder, tester, analyzer, architect');
+  console.log('Tool hints: file, browser, web, n8n, workflow, aws, think, docs');
+  process.exit(1);
+}
+
+const agentType = args[0];
+const task = args[1];
+
+// Parse tool hints
+let toolHints = ['file']; // Default
+const toolsIndex = args.indexOf('--tools');
+if (toolsIndex !== -1 && args[toolsIndex + 1]) {
+  toolHints = args[toolsIndex + 1].split(',');
+}
+
+// Get agent definition
+const agent = agents[agentType];
+if (!agent) {
+  console.error(`Unknown agent type: ${agentType}`);
+  console.error('Available: ' + Object.keys(agents).join(', '));
+  process.exit(1);
+}
+
+// Build prompt with agent context
+const prompt = `${agent.prompt}\n\nTask: ${task}`;
+
+console.log(`🤖 Spawning ${agentType} agent...`);
+console.log(`📦 Tools: ${toolHints.join(', ')}`);
+console.log('');
+
+try {
+  const result = await runWithMCP(prompt, toolHints);
+  console.log(result);
+} catch (e) {
+  console.error('Agent error:', e.message);
+  process.exit(1);
+}

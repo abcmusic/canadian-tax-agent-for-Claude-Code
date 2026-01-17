@@ -1,0 +1,28 @@
+{
+  "name": "claude-agent-sdk-migration",
+  "version": "1.0.0",
+  "description": "Claude Agent SDK migration from claude-flow",
+  "type": "module",
+  "scripts": {
+    "test": "npx tsx tests/e2e.test.ts",
+    "test:agents": "npx tsx tests/agent.test.ts",
+    "test:mcp": "npx tsx tests/mcp.test.ts",
+    "test:memory": "npx tsx tests/memory.test.ts",
+    "benchmark": "npx tsx tests/benchmark.ts",
+    "benchmark:quick": "npx tsx tests/benchmark-quick.ts",
+    "verify": "npx tsx scripts/verify.ts",
+    "cutover": "bash scripts/cutover.sh"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.1.62",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.2",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

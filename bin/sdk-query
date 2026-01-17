@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+/**
+ * SDK Query CLI
+ *
+ * Usage: sdk-query "<prompt>" [--tools file,browser,n8n]
+ *
+ * Runs a query with optimized MCP loading.
+ */
+
+import { runWithMCP, runSimple } from '../lib/mcp-bridge.js';
+
+const args = process.argv.slice(2);
+
+if (args.length < 1) {
+  console.log('Usage: sdk-query "<prompt>" [--tools file,browser,n8n]');
+  console.log('');
+  console.log('Tool hints: file, browser, web, n8n, workflow, aws, think, docs');
+  console.log('Omit --tools for simple query without MCP servers');
+  process.exit(1);
+}
+
+const prompt = args[0];
+
+// Parse tool hints
+const toolsIndex = args.indexOf('--tools');
+let toolHints = null;
+if (toolsIndex !== -1 && args[toolsIndex + 1]) {
+  toolHints = args[toolsIndex + 1].split(',');
+}
+
+try {
+  let result;
+  if (toolHints) {
+    console.log(`📦 Loading tools: ${toolHints.join(', ')}`);
+    result = await runWithMCP(prompt, toolHints);
+  } else {
+    console.log('📦 Simple query (no MCP servers)');
+    result = await runSimple(prompt);
+  }
+  console.log('');
+  console.log(result);
+} catch (e) {
+  console.error('Query error:', e.message);
+  process.exit(1);
+}

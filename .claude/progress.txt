@@ -1,0 +1,17 @@
+# Project Progress Notes
+
+Project: sdk
+Started: 2025-12-09 19:44
+
+---
+
+## Initial Setup
+
+- Project tracking auto-initialized by Claude
+- Feature list created (0 features)
+- Session resume enabled
+
+**Next Steps:**
+1. Add features: ~/.claude/scripts/manage-features.sh add "feature description"
+2. Work on features
+3. Update session summary: ~/.claude/scripts/update-project-summary.sh

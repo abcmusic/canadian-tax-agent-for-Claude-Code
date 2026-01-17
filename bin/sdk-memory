@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+/**
+ * SDK Memory CLI
+ *
+ * Usage:
+ *   sdk-memory store <key> <value>
+ *   sdk-memory query <key>
+ *   sdk-memory list
+ *   sdk-memory clear
+ *
+ * Replaces: npx claude-flow@alpha memory store/query
+ */
+
+import { memoryStore, memoryQuery, memoryList, memoryClear } from '../lib/memory.js';
+
+const args = process.argv.slice(2);
+const command = args[0];
+
+async function main() {
+  switch (command) {
+    case 'store':
+      if (args.length < 3) {
+        console.error('Usage: sdk-memory store <key> <value>');
+        process.exit(1);
+      }
+      await memoryStore(args[1], args.slice(2).join(' '));
+      console.log(`✓ Stored: ${args[1]}`);
+      break;
+
+    case 'query':
+      if (args.length < 2) {
+        console.error('Usage: sdk-memory query <key>');
+        process.exit(1);
+      }
+      const value = await memoryQuery(args[1]);
+      if (value) {
+        console.log(value);
+      } else {
+        console.log(`(no value for key: ${args[1]})`);
+      }
+      break;
+
+    case 'list':
+      const keys = await memoryList();
+      if (keys.length === 0) {
+        console.log('(no keys stored)');
+      } else {
+        keys.forEach(k => console.log(k));
+      }
+      break;
+
+    case 'clear':
+      await memoryClear();
+      console.log('✓ Memory cleared');
+      break;
+
+    default:
+      console.log('SDK Memory');
+      console.log('');
+      console.log('Commands:');
+      console.log('  sdk-memory store <key> <value>  - Store a value');
+      console.log('  sdk-memory query <key>          - Query a value');
+      console.log('  sdk-memory list                 - List all keys');
+      console.log('  sdk-memory clear                - Clear all memory');
+      process.exit(1);
+  }
+}
+
+main().catch(e => {
+  console.error('Error:', e.message);
+  process.exit(1);
+});
