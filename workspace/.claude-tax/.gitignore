@@ -1,0 +1,14 @@
+# Ignore all sensitive tax data
+*
+
+# Except these configuration templates (encrypted data only)
+!.gitignore
+!config.json
+!document-locations.json
+
+# Ignore all subdirectories
+rules/
+forms/
+templates/
+history/
+working/
