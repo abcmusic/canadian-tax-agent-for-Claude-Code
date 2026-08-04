@@ -67,6 +67,8 @@ Audit the library as a system, not a pile of posts. Authority accrues to topics,
 - Core Web Vitals baseline targets
 - AI search readiness requirements
 - Mobile-first considerations
+- Gated-content leakage check (public sitemaps must contain zero private/portal URLs — `seo-sitemap` § Gated-Content Leakage; mandatory in initial AND repeat audits)
+- Scheduled-content health: overdue-scheduled detection in initial scans; scheduler-integrity count-match on repeat audits / after bulk imports (`seo-technical` § Scheduled-Content Publishing Health)
 
 ### 6. Implementation Roadmap (4 phases)
 

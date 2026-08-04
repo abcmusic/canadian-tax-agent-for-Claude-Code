@@ -66,7 +66,13 @@ A cluster can look correct at the pillar level (a hub page exists, satellites ex
 
 This overlaps with `seo-plan`'s Cluster/Topical-Architecture Audit (which catches "pillar exists with no satellites" at the planning stage) — this check catches "pillar exists, satellites exist, but the pillar's actual rendered content doesn't link to most of them," which only shows up once real content is read, not just page inventory.
 
-#### Crawl Budget Allocation
+#### Scheduled-Content Publishing Health
+
+Scoping: **initial-scan portion = overdue detection only** (cheap, and surfaces stuck stock pages/articles the owner believes are live); the **scheduler-integrity count-match is a repeat-audit / monitoring check**, run on properties under ongoing management or after any bulk content import — not part of a first-pass audit unless overdue items are found.
+
+1. **Overdue detection (initial scan).** Any scheduled/future-status item whose publish date is in the past is stuck — it will never self-publish and is invisible to search indefinitely. WP: `wp post list --post_type=page,post --post_status=future --fields=ID,post_date` and flag dates < today. Any hit = **High**, and escalates the count-match check below into the same audit.
+2. **Scheduler-integrity count-match (repeat audits / post-bulk-import).** WP: scheduled-post count must equal registered publish-event count — `wp post list --post_type=page,post --post_status=future --format=count` vs `wp cron event list | grep -c publish_future_post`. Mismatch = pages created without their publish trigger (batch/import paths can silently skip event registration); those pages will sit in "scheduled" forever. Real case: 30 pages stuck 3+ weeks, undetectable by any content or sitemap audit because scheduled pages are correctly absent from both.
+3. Non-WP platforms: verify the scheduler actually fired for a recent sample (compare intended publish timestamps against live status) rather than trusting the CMS's "scheduled" label.
 
 Page count and sitemap presence say nothing about whether the crawler is actually spending time on the pages that matter. If origin access logs are available (Apache/Nginx, even a 14-day retention window is enough for a snapshot):
 
