@@ -18,6 +18,17 @@ You do not need to know which skill applies — describe what you're trying to a
 
 ---
 
+## Claims Freshness
+
+Before every full audit, live-check three volatile sources rather than reusing embedded facts:
+1. **status.search.google.com/summary** — current ranking/spam update history.
+2. **Google's spam-policies page** — last-updated date, to confirm no newer policy has superseded what's embedded here.
+3. **Rich-results gallery type list** — current supported/deprecated schema types.
+
+Treat any embedded stat or dated claim in this suite older than 6 months as unverified until rechecked against the live source.
+
+---
+
 ## Routing Table
 
 | If you need... | Load this skill |
@@ -41,7 +52,7 @@ You do not need to know which skill applies — describe what you're trying to a
 
 ## Properties in Scope
 
-- **music-lessons.ca** (WordPress/Avada — NEVER defer `jquery-core` in functions.php, breaks FlexSlider)
+- **music-lessons.ca** (WordPress/Avada)
 - **hinna.io / beta.hinna.io** (Spring Boot/Thymeleaf SaaS platform)
 
 ---
@@ -109,7 +120,6 @@ For individual commands, load the relevant sub-skill directly from the routing t
 - Never recommend HowTo schema (deprecated Sept 2023)
 - FAQ schema only for government and healthcare sites
 - All Core Web Vitals references use INP, never FID
-- music-lessons.ca: never defer `jquery-core` — breaks Avada FlexSlider
 
 ---
 

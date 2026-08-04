@@ -11,8 +11,9 @@ description: Use to analyze existing XML sitemaps or generate new ones. Validate
 ### Validation Checks
 - Valid XML format
 - URL count <50,000 per file (protocol limit)
+- File size <50MB uncompressed per file (protocol limit, alongside the 50k URL cap)
 - All URLs return HTTP 200
-- `<lastmod>` dates are accurate (not all identical)
+- `<lastmod>` dates are accurate (not all identical) — must reflect genuine content updates; Google's helpful-content guidance flags artificial freshness bumping (touching lastmod without a real content change) as a quality signal to avoid
 - No deprecated tags: `<priority>` and `<changefreq>` are ignored by Google
 - Sitemap referenced in robots.txt
 - Compare crawled pages vs sitemap — flag missing pages
@@ -37,6 +38,7 @@ Private/gated content appearing in a public sitemap is a privacy exposure (poten
 | Issue | Severity | Fix |
 |-------|----------|-----|
 | >50k URLs in single file | Critical | Split with sitemap index |
+| >50MB uncompressed single file | Critical | Split with sitemap index |
 | Non-200 URLs | High | Remove or fix broken URLs |
 | Gated/private URLs in public sitemap | Critical | Noindex + sitemap-exclude + verify live; consider GSC removal request |
 | Noindexed URLs included | High | Remove from sitemap |

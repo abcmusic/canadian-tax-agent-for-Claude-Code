@@ -32,8 +32,10 @@ As of 2025-2026, AI companies actively crawl the web to train models and power A
 | Google-Extended | Google | `Google-Extended` | Gemini training (NOT search) |
 | CCBot | Common Crawl | `CCBot` | Open dataset |
 
+**Verification note:** Google's crawler IP-range files moved to a new location (per the Mar 2026 "Inside Googlebot" post). Fetch the current list from `developers.google.com/search/docs/crawling-indexing/overview-google-crawlers` at audit time rather than hardcoding a URL — old IP-range file locations may 404 or be stale. The `Google-Extended` guidance below could not be re-verified as of 2026-08-04 (fetch failed) — verify against current crawler docs at audit time before treating it as authoritative.
+
 **Key distinctions:**
-- Blocking `Google-Extended` prevents Gemini training use but does NOT affect Google Search indexing or AI Overviews (those use `Googlebot`)
+- Blocking `Google-Extended` prevents Gemini training use but does NOT affect Google Search indexing or AI Overviews (those use `Googlebot`) — **verify against current crawler docs at audit time**
 - Blocking `GPTBot` prevents OpenAI training but does NOT prevent ChatGPT from citing your content via browsing (`ChatGPT-User`)
 - ~3-5% of websites now use AI-specific robots.txt rules
 
@@ -83,6 +85,12 @@ Page count and sitemap presence say nothing about whether the crawler is actuall
 #### 404 vs 410 for Retired URLs
 
 For URLs that are permanently gone (deleted spam content, retired campaigns) rather than moved: serve **410 Gone**, not 404. Google treats 404 as possibly-temporary and keeps re-checking for months; 410 is an explicit "never coming back" signal that drops the URL from the crawl queue substantially faster (days–weeks vs months). Never redirect these to unrelated real content — Google treats a redirect to a non-equivalent destination as a soft-404 and the crawl cost is paid anyway, plus it manufactures an unwanted topical association. Never `robots.txt`-block a URL you want retired via 410 — a blocked URL is never re-crawled, so Google never sees the 410 and the stale entry can persist indefinitely.
+
+#### Spam Policy Checks (per Google spam-policies page, last updated 2026-05-15)
+
+- **Back button hijacking** (also written "back button hijacking", new spam category, Apr 2026): flag any UX/history-manipulation pattern that traps the browser back button (injecting fake history states, intercepting back navigation to redirect elsewhere, or repeated redirect loops on back-press). Treat as a High-severity finding — it is now an explicit spam policy violation, not just a UX nit.
+- **Scaled content abuse**: current policy wording is "using generative AI tools to generate many pages without adding value for users" — quote this phrasing in findings rather than the older method-agnostic framing alone.
+- **Site reputation abuse carve-outs**: genuine UGC/forums, syndicated news content, and clearly-attributed affiliate content are explicitly NOT violations under this policy — do not flag them as reputation abuse; only flag third-party content hosted with no editorial oversight or attribution.
 
 ### 2. Indexability
 - Canonical tags: self-referencing, no conflicts with noindex

@@ -20,6 +20,7 @@ Every ranking claim is inference until the data is connected. Verify:
 - Analytics installed (GA4 or equivalent) AND conversion events defined — a tag firing is not a conversion view
 - Review sources connected if reviews are part of the strategy
 - Baseline captured (impressions, positions, conversions) before scaling any recommendation
+- **GEO/AI-visibility measurement**: GSC's generative-AI performance reports (announced Jun 2026) are the first-party measurement source for AI Overviews/AI Mode visibility — wire these in as the default GEO measurement source instead of treating AI visibility as unmeasurable. Also available: branded-queries filter + custom annotations (Nov 2025) and hourly data (Dec 2025) — use these to tighten measurement windows around specific changes.
 If any item is unconfirmed: flag it as a P0 action in the plan and mark all performance claims as "inference until connected."
 
 **Before trusting any GA4 total, check for two silent corruptions — both have produced real false conclusions:**
@@ -134,7 +135,7 @@ Include in every plan for a domain <12 months old or entering a new topic:
 | Competitive ranking | Months 3-6 | Clusters climb with depth, internal links, consistent publishing |
 | Compounding | Months 6+ | Topical authority compounds; new clusters rank faster |
 
-First competitive rankings are 3-6 months out regardless of effort — spend early cycles building interlinked structure, not chasing head terms that won't convert before the domain seasons.
+First competitive rankings typically arrive 3-6 months out — varies with domain age and competition level; spend early cycles building interlinked structure, not chasing head terms that won't convert before the domain seasons.
 
 ## Industry Templates
 
