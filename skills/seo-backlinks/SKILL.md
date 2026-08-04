@@ -50,7 +50,7 @@ Follow the exact pattern used by the SEO/AEO/GEO/pSEO pages in `~/.claude/skills
 - `{{BACKLINKS_HEADLINE}}` — name the finding in one sentence (e.g. "The links exist. They just don't point at the new work.")
 - `{{BACKLINKS_PLAIN}}` — plain-language read: what the site has (domain count, concentration), the one real gap, why it matters for the newest content specifically
 - `{{BACKLINKS_TECHNICAL}}` — data source declared explicitly (GSC-only / GSC+DataForSEO), every number from § 2 above with its source, the scoring composition actually used
-- Priority/Fix/Expected-Effect rows — P0 for zero new-content coverage if that's the finding; otherwise rank by weight (domain diversity gaps before concentration gaps before anchor-text mix)
+- Priority/Fix/Expected-Effect rows — P0 for zero new-content coverage if that's the finding; otherwise rank by weight (domain diversity gaps before concentration gaps before anchor-text mix). When a Fix needs a concrete tactic (not just "close the gap"), cite one from `references/acquisition-playbook.md` by name — free-or-near-free, Google-policy-safe tactics only, never the excluded/paid-exchange list in that file.
 - Scoreboard card token set: `{{SCORE_BACKLINKS}}`, `{{RAG_CLASS_BACKLINKS}}`, `{{RAG_LABEL_BACKLINKS}}`, `{{BACKLINKS_CARD_SUMMARY}}`, `{{BACKLINKS_TOP_MOVE}}` — same shape as the existing SEO/AEO/GEO/pSEO cards
 
 Report page position: page 8, immediately after pSEO + Strategy Coverage (and its Competitor Landscape sub-page, 7b) and before "All other areas + rollout." See `~/.claude/skills/seo/assets/report-template/README.md` for the full section order.
