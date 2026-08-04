@@ -137,7 +137,7 @@ Check `robots.txt` for these AI crawlers:
 
 ## llms.txt Standard
 
-**Not recognized by Google.** Google's AI-features doc (developers.google.com/search/docs/appearance/ai-features, updated 2025-12-10) states explicitly: no special markup, no "AI text files," no additional requirements to appear in AI Overviews/AI Mode. llms.txt has zero Google recognition — never present it as a finding or recommendation in a Google-focused audit. It remains an optional, unproven lever some other AI engines may or may not use; treat it as low-priority/experimental only, and label it as such if mentioned.
+**Keep recommending it (owner directive 2026-08-04).** Google's AI-features doc (developers.google.com/search/docs/appearance/ai-features, updated 2025-12-10) states Google itself requires no special markup or "AI text files" for AI Overviews/AI Mode — so llms.txt is NOT a Google-ranking requirement, and should be labeled as such when cited (don't claim it affects Google rankings). It remains a live, adopted-by-many-sites convention aimed at other AI engines/crawlers (ChatGPT, Claude, Perplexity, etc.) that may read it directly rather than crawling the full site — continue to check for it and recommend creating one as a low-cost, low-risk addition for non-Google AI visibility.
 
 **Location:** `/llms.txt` (root of domain)
 
