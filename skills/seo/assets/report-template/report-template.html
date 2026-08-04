@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO Diagnostic — {{CLIENT_NAME}}</title>
+<!--
+  SEO DIAGNOSTIC REPORT — MASTER TEMPLATE v2.0 (brand-free internal tool)
+  Replace every {{TOKEN}} per engagement. See README.md for the full spec.
+  Render to PDF: headless Chrome (Letter portrait, margins 0) — see README "render command".
+  Section order is the standard — cut a section if truly N/A, never reorder.
+  Structure, CSS, fonts, and the 10-page layout are byte-identical across engagements; only
+  {{TOKEN}} content and table rows vary.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,900;1,8..60,400;1,8..60,700&family=Archivo:wght@400;500;600;700&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F3EC; --bg-tint:#EBEDDD; --ink:#20241B; --ink-soft:#4A4F41;
+    --green-900:#2E4020; --green-600:#4C7A34; --green-tint:#DFE5CB;
+    --rag-red:#F44336; --rag-amber:#FFC107; --rag-green:#4CAF50;
+    --hairline:#D8D4C4; --paper-on-dark:#F1EFE4;
+    --serif:"Source Serif 4", Georgia, serif; --sans:"Archivo", -apple-system, sans-serif; --mono:"Fragment Mono","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:10.5px;line-height:1.55}
+  @page{size:Letter portrait;margin:0}
+  .page{width:8.5in;min-height:11in;margin:0 auto;position:relative;padding:.62in .75in .85in;background:var(--bg);page-break-before:always;break-before:page;display:flex;flex-direction:column}
+  .page:first-child{page-break-before:auto;break-before:auto}
+  .mono-label{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .mono-label--green{color:var(--green-600)}
+  .runhead{display:flex;justify-content:space-between;border-bottom:1px solid var(--hairline);padding-bottom:8px;margin-bottom:22px}
+  .pagefoot{position:absolute;left:.75in;right:.75in;bottom:.45in;display:flex;justify-content:space-between;border-top:1px solid var(--hairline);padding-top:8px}
+  h1,h2{font-family:var(--serif);font-weight:800;letter-spacing:-0.015em;text-wrap:balance}
+  .page-title{font-size:29px;line-height:1.12;margin-bottom:10px}
+  .lede{font-size:11.5px;line-height:1.6;max-width:62ch;margin-bottom:18px}
+  em{font-style:italic;color:var(--green-600)}
+  .band{background:var(--green-900);color:var(--paper-on-dark);border-radius:4px;padding:20px 26px;margin-top:auto}
+  .band .mono-label{color:var(--green-tint)}
+  .band p{font-family:var(--serif);font-size:14.5px;line-height:1.5;margin-top:8px}
+  .band em{color:#C9DBA4}
+
+  /* dual-register blocks */
+  .plain{font-family:var(--serif);font-size:13px;line-height:1.6;max-width:66ch;margin:0 0 14px}
+  .techblock{background:var(--bg-tint);border-radius:4px;padding:13px 18px;margin:0 0 16px;max-width:100%}
+  .techblock .mono-label{display:block;margin-bottom:6px}
+  .techblock p{font-size:9.8px;line-height:1.55;color:var(--ink);max-width:78ch}
+  .techblock p+p{margin-top:7px}
+  .techblock code{font-family:var(--mono);font-size:8.8px}
+
+  /* dashboard */
+  .dash{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:4px}
+  .card{display:block;text-decoration:none;color:var(--ink);border:1.5px solid var(--hairline);border-radius:6px;padding:13px 18px 12px;background:rgba(255,255,255,.4);position:relative}
+  .card .score{font-family:var(--serif);font-weight:900;font-size:46px;line-height:1;letter-spacing:-.02em}
+  .card .of{font-family:var(--mono);font-size:9px;color:var(--ink-soft)}
+  .card h3{font-family:var(--serif);font-size:16px;font-weight:700;margin:2px 0 6px}
+  .card p{font-size:9.6px;color:var(--ink-soft);line-height:1.5;max-width:44ch}
+  .card .move{margin-top:10px;font-size:9.6px;color:var(--ink)}
+  .card .move b{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:3px}
+  .card .jump{position:absolute;top:16px;right:18px;font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--ink-soft)}
+  .rag{display:inline-block;font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;text-transform:uppercase;padding:2.5px 8px;border-radius:2px;color:var(--ink);vertical-align:6px;margin-left:8px}
+  .card--good{border-color:var(--rag-green)} .card--good .score{color:var(--ink)} .card--good .rag{background:var(--rag-green)}
+  .card--warn{border-color:var(--rag-amber)} .card--warn .score{color:var(--ink)} .card--warn .rag{background:var(--rag-amber)}
+  .card--bad{border-color:var(--rag-red)} .card--bad .score{color:var(--ink)} .card--bad .rag{background:rgba(244,67,54,.14);border:1.5px solid var(--rag-red);color:#B71C1C;padding:1px 7px}
+  /* .card--lead is amber/green/red per its current score each reporting round — set via .rag-green/.rag-amber/.rag-red on the element (e.g. class="card card--lead rag-amber") */
+  .card--lead{display:block;color:#fff;padding:12px 16px 11px}
+  .card--lead .score{font-size:48px;color:#fff}
+  .card--lead h3{color:#fff;font-size:16px;margin-top:2px}
+  .card--lead p{color:#E8F5E9;font-size:9.4px}
+  .card--lead .move{color:#fff;font-size:9.4px;margin-top:5px}
+  .card--lead .move b{color:#C8E6C9}
+  .card--lead .jump{color:#C8E6C9}
+  a.card--lead .what, .card--lead p.what{color:#E8F5E9 !important;font-size:8.8px}
+  .card--lead.rag-green{background:#2E7D32;border-color:var(--rag-green)}
+  .card--lead.rag-green .rag{background:#fff;color:#2E7D32}
+  .card--lead.rag-amber{background:#8A6D00;border-color:var(--rag-amber)}
+  .card--lead.rag-amber .rag{background:var(--rag-amber);color:var(--ink)}
+  .card--lead.rag-red{background:#B71C1C;border-color:var(--rag-red)}
+  .card--lead.rag-red .rag{background:#fff;color:#B71C1C}
+  .card .what{font-size:8.8px;font-style:italic;color:var(--ink-soft);margin:0 0 4px;max-width:46ch;line-height:1.4}
+  .card p{line-height:1.45}
+  .card .move{margin-top:7px}
+  .card h3{margin:1px 0 4px}
+
+  table{width:100%;border-collapse:collapse}
+  th{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);text-align:left;font-weight:400;padding:0 10px 7px 0;border-bottom:1.5px solid var(--ink)}
+  td{padding:8px 10px 8px 0;border-bottom:1px solid var(--hairline);vertical-align:top;font-size:9.8px}
+  td.num{font-family:var(--mono);font-size:9.5px;white-space:nowrap}
+  .kw{font-weight:600}
+  .tier{display:inline-block;font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;padding:2px 7px;border-radius:2px;color:var(--paper-on-dark);background:var(--green-900);white-space:nowrap}
+  .tier--mid{background:var(--green-600)} .tier--low{background:#8B8873}
+  .tier--warn{background:var(--rag-amber);color:var(--ink)} .tier--bad{background:rgba(244,67,54,.14);border:1.5px solid var(--rag-red);color:#B71C1C}
+
+  /* projection cards with area graphs */
+  .projgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:2px 0 8px}
+  .projcard{border:1px solid var(--hairline);border-radius:6px;padding:10px 14px 9px;background:rgba(255,255,255,.45)}
+  .projcard h4{font-family:var(--serif);font-size:12.5px;font-weight:700;margin-bottom:2px}
+  .projcard .pbasis{font-size:8.4px;color:var(--ink-soft);line-height:1.4;margin-bottom:7px}
+  .pgraph{position:relative;padding-top:22px}
+  .pgraph svg{display:block;width:100%;height:82px}
+  .pchip{position:absolute;font-family:var(--mono);font-size:8.5px;background:var(--ink);color:var(--paper-on-dark);padding:1.5px 7px;border-radius:9px;white-space:nowrap}
+  .pchip--start{background:#fff;color:var(--ink);border:1px solid var(--hairline);left:0;bottom:2px}
+  .pchip--end{right:0;bottom:2px}
+  .pchip--ceil{right:0;top:0;background:none;color:var(--ink-soft);border:1px solid var(--hairline);padding:1px 6px}
+  .plegend{display:flex;gap:14px;margin-top:5px;font-size:8px;color:var(--ink-soft)}
+  .plegend span{display:flex;align-items:center;gap:4px}
+  .plegend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .paxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:7.5px;color:var(--ink-soft);margin-top:3px}
+
+  .cover{justify-content:flex-start}
+  .cover h1{font-size:58px;line-height:1.04;letter-spacing:-.02em;margin:12px 0 24px;max-width:16ch}
+  .cover .thesis{font-family:var(--serif);font-size:18px;line-height:1.45;font-weight:500;max-width:46ch;margin-bottom:.7in}
+  .cover .verdict{max-width:66ch;color:var(--ink-soft);font-size:10.5px;line-height:1.65;border-top:2px solid var(--green-600);padding-top:16px}
+  .cover .meta{display:grid;grid-template-columns:repeat(3,auto);gap:0 56px;margin-top:auto;border-top:1px solid var(--hairline);padding-top:14px}
+  .cover .meta div b{display:block;font-weight:600;font-size:11px;margin-top:4px}
+  @media screen{body{padding:24px 0}.page{box-shadow:0 2px 24px rgba(32,36,27,.14);margin-bottom:24px}}
+  @media print{.page{box-shadow:none;margin:0}}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 · COVER (brand-free) -->
+<section class="page cover">
+  <div style="display:flex;justify-content:space-between;margin-bottom:1.5in">
+    <span class="mono-label">INTERNAL DIAGNOSTIC · CONFIDENTIAL</span>
+    <span class="mono-label">SEO · AEO · GEO · pSEO · BACKLINKS</span>
+  </div>
+  <div class="mono-label mono-label--green">{{PROPERTY}} · {{CLIENT_NAME}}</div>
+  <h1>{{COVER_HEADLINE — a sentence naming the gap, e.g. "The site machines love. The pages people see lag it."}}</h1>
+  <p class="thesis">{{COVER_THESIS — one sentence naming the report's scope, e.g. "Full-surface diagnostic: classic search, answer engines, AI citation, and the programmatic build — scored, prioritized, and ready to hand to an implementer."}}</p>
+  <p class="verdict">{{COVER_VERDICT — 3–5 sentences. Open with what's already done right (name the concrete proof points). Name what remains in one clause. State that the report scores each surface, explains every finding twice (plain then technical), and ends with an ordered fix list.}}</p>
+  <div class="meta">
+    <div><span class="mono-label">Property</span><b>{{PROPERTY}}</b></div>
+    <div><span class="mono-label">Method</span><b>{{METHOD — e.g. "Live crawl, read-only"}}</b></div>
+    <div><span class="mono-label">Date</span><b>{{DATE}}</b></div>
+  </div>
+</section>
+
+<!-- PAGE 2 · DASHBOARD -->
+<section class="page">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">SCOREBOARD</span></div>
+  <h2 class="page-title">Six surfaces, six scores</h2>
+  <p class="lede" style="margin-bottom:12px">On screen, each card is a live link to its section; on paper, use the page number on the card.</p>
+
+  <div class="dash">
+    <a class="card card--lead {{RAG_CLASS_OVERALL}}" href="#agg">
+      <div><span class="score">{{SCORE_OVERALL}}</span><span class="of"> / 100</span></div>
+      <div>
+        <h3>Overall <span class="rag">{{RAG_LABEL_OVERALL}}</span></h3>
+        <p class="what">One number for the whole site: how ready it is to be found, answered from, and quoted — everywhere people search.</p>
+        <p>{{OVERALL_SUMMARY — what's strong, what's holding it back, and the composition rule, e.g. "Composition: mean of the five surface scores plus platform & measurement."}}</p>
+        <div class="move"><b>Top move</b>{{OVERALL_TOP_MOVE}}</div>
+      </div>
+      <span class="jump">→ ALL OTHER AREAS · P.09</span>
+    </a>
+    <a class="card {{RAG_CLASS_SEO}}" href="#seo">
+      <div><span class="score">{{SCORE_SEO}}</span><span class="of"> / 100</span></div>
+      <h3>SEO <span class="rag">{{RAG_LABEL_SEO}}</span></h3>
+      <p class="what">What is SEO? Being easy for Google to find, read, and rank.</p>
+      <p>{{SEO_CARD_SUMMARY — one line, cite the sub-scores}}</p>
+      <div class="move"><b>Top move</b>{{SEO_TOP_MOVE}}</div>
+      <span class="jump">→ SEO · P.05</span>
+    </a>
+    <a class="card {{RAG_CLASS_AEO}}" href="#aeo">
+      <div><span class="score">{{SCORE_AEO}}</span><span class="of"> / 100</span></div>
+      <h3>AEO <span class="rag">{{RAG_LABEL_AEO}}</span></h3>
+      <p class="what">What is AEO? Being the instant answer when someone asks a direct question, like {{EXAMPLE_QUESTION}}.</p>
+      <p>{{AEO_CARD_SUMMARY}}</p>
+      <div class="move"><b>Top move</b>{{AEO_TOP_MOVE}}</div>
+      <span class="jump">→ AEO · P.06</span>
+    </a>
+    <a class="card {{RAG_CLASS_GEO}}" href="#geo">
+      <div><span class="score">{{SCORE_GEO}}</span><span class="of"> / 100</span></div>
+      <h3>GEO <span class="rag">{{RAG_LABEL_GEO}}</span></h3>
+      <p class="what">What is GEO? Being the school AI assistants like ChatGPT quote when people ask them for recommendations.</p>
+      <p>{{GEO_CARD_SUMMARY}}</p>
+      <div class="move"><b>Top move</b>{{GEO_TOP_MOVE}}</div>
+      <span class="jump">→ GEO · P.06</span>
+    </a>
+    <a class="card {{RAG_CLASS_PSEO}}" href="#pseo">
+      <div><span class="score">{{SCORE_PSEO}}</span><span class="of"> / 100</span></div>
+      <h3>pSEO <span class="rag">{{RAG_LABEL_PSEO}}</span></h3>
+      <p class="what">What is pSEO? Building one page per {{PSEO_UNIT — e.g. "neighbourhood and instrument"}} automatically, so every local search finds a matching page.</p>
+      <p>{{PSEO_CARD_SUMMARY}}</p>
+      <div class="move"><b>Top move</b>{{PSEO_TOP_MOVE}}</div>
+      <span class="jump">→ pSEO · P.07</span>
+    </a>
+    <a class="card {{RAG_CLASS_BACKLINKS}}" href="#backlinks">
+      <div><span class="score">{{SCORE_BACKLINKS}}</span><span class="of"> / 100</span></div>
+      <h3>Backlinks <span class="rag">{{RAG_LABEL_BACKLINKS}}</span></h3>
+      <p class="what">What is this? Whether the rest of the web points at this site — and specifically, whether it points at the newest pages, not just the homepage.</p>
+      <p>{{BACKLINKS_CARD_SUMMARY — one line, cite referring-domain count and new-content coverage}}</p>
+      <div class="move"><b>Top move</b>{{BACKLINKS_TOP_MOVE}}</div>
+      <span class="jump">→ BACKLINKS · P.08</span>
+    </a>
+  </div>
+
+  <p class="mono-label" style="margin-top:14px">SCORING — GREEN ≥ 88 (MAINTAIN ONLY) · AMBER 65–87 (WORTHWHILE FIXES OPEN) · RED &lt; 65 (URGENT). A SURFACE CANNOT GO GREEN WHILE ANY CRITICAL OR MAJOR FIX IS OPEN. EACH CARD STATES ITS COMPOSITION.</p>
+
+  <div class="pagefoot"><span class="mono-label">INTERNAL DIAGNOSTIC · {{METHOD_SHORT}} · {{DATE}}</span><span class="mono-label">02 / SCOREBOARD</span></div>
+</section>
+
+<!-- PAGE 3 · SUMMARY, TWICE -->
+<section class="page">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">SUMMARY</span></div>
+  <h2 class="page-title" style="margin-bottom:6px">What we found, and what needs doing</h2>
+
+  <p class="plain" style="font-size:11.8px;margin-bottom:10px">{{SUMMARY_PLAIN — 4–7 sentences in plain language: what's already strong, the core problem in one clause, why it's cheap to fix, and the shape of the fix (no rebuild, copy and links / whatever applies).}}</p>
+
+  <div class="techblock" style="padding:10px 16px;margin-bottom:10px">
+    <span class="mono-label mono-label--green">TECHNICAL</span>
+    <p style="font-size:9.2px;line-height:1.45">{{SUMMARY_TECHNICAL — method + date, measurement stack confirmed, technical score + what's driving it, the core defects list, and the order of work.}}</p>
+  </div>
+
+  <h2 style="font-family:var(--serif);font-size:16px;margin:10px 0 6px">How to read this report</h2>
+  <p class="plain" style="font-size:11.8px">Every section opens in plain language, like this paragraph. The tinted boxes underneath hold the technical version of the same facts; skip them freely, they exist for whoever implements the work. Coloured chips carry the verdict everywhere: green means maintain only, amber means worthwhile fixes are open, red means urgent. The bar for green is deliberately high (88 of 100) — a surface stays amber while any critical or major fix remains open, so a green badge actually means finished.</p>
+
+  <div class="pagefoot"><span class="mono-label">INTERNAL DIAGNOSTIC</span><span class="mono-label">03 / SUMMARY</span></div>
+</section>
+
+<!-- PAGE 4 · WHY + PROJECTIONS -->
+<section class="page">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">ESTIMATED IMPACTS</span></div>
+  <h2 class="page-title" style="margin-bottom:6px">Estimated impacts: why bother?</h2>
+  <p class="plain" style="font-size:11.5px;margin-bottom:10px">{{IMPACTS_LEDE — what happens if nothing changes, what competitors who fix this get, and what this site gets once the fixes land.}}</p>
+
+  <div class="projgrid">
+    <div class="projcard">
+      <h4>{{PROJECTION_1_TITLE — e.g. "Search visits"}}</h4>
+      <p class="pbasis">{{PROJECTION_1_BASIS — pale band = total addressable demand; solid band = captured slice; state the uplift basis and the discount applied.}}</p>
+      <div class="pgraph">
+        <svg viewBox="0 0 300 56" preserveAspectRatio="none">
+          <path d="M0,9 C70,8 150,10 300,8 L300,56 L0,56 Z" fill="#4CAF50" opacity="0.12"/>
+          <path d="M0,9 C70,8 150,10 300,8" fill="none" stroke="#9CBE86" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M0,46 C90,46 170,43 300,37 L300,56 L0,56 Z" fill="#4CAF50" opacity="0.85"/>
+          <path d="M0,46 C90,46 170,43 300,37" fill="none" stroke="#2E7D32" stroke-width="2"/>
+        </svg>
+        <span class="pchip pchip--ceil">CEILING ≈{{PROJECTION_1_CEILING}}</span>
+        <span class="pchip pchip--start">≈{{PROJECTION_1_START}}</span><span class="pchip pchip--end" style="background:#2E7D32;color:#fff">≈{{PROJECTION_1_END}}</span>
+      </div>
+      <div class="paxis"><span>TODAY</span><span>+12 MONTHS</span></div>
+    </div>
+    <div class="projcard">
+      <h4>{{PROJECTION_2_TITLE — e.g. "AI-assistant mentions"}}</h4>
+      <p class="pbasis">{{PROJECTION_2_BASIS}}</p>
+      <div class="pgraph">
+        <svg viewBox="0 0 300 56" preserveAspectRatio="none">
+          <path d="M0,9 C70,8 150,10 300,8 L300,56 L0,56 Z" fill="#4CAF50" opacity="0.12"/>
+          <path d="M0,9 C70,8 150,10 300,8" fill="none" stroke="#9CBE86" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M0,48 C80,48 150,40 300,26 L300,56 L0,56 Z" fill="#4CAF50" opacity="0.85"/>
+          <path d="M0,48 C80,48 150,40 300,26" fill="none" stroke="#2E7D32" stroke-width="2"/>
+        </svg>
+        <span class="pchip pchip--ceil">CEILING: {{PROJECTION_2_CEILING}}</span>
+        <span class="pchip pchip--end" style="background:#2E7D32;color:#fff">{{PROJECTION_2_END}}</span>
+      </div>
+      <div class="paxis"><span>TODAY</span><span>+12 MONTHS</span></div>
+    </div>
+    <div class="projcard">
+      <h4>{{PROJECTION_3_TITLE — e.g. "Trial-lesson inquiries"}}</h4>
+      <p class="pbasis">{{PROJECTION_3_BASIS}}</p>
+      <div class="pgraph">
+        <svg viewBox="0 0 300 56" preserveAspectRatio="none">
+          <path d="M0,11 C70,10 150,12 300,10 L300,56 L0,56 Z" fill="#4CAF50" opacity="0.12"/>
+          <path d="M0,11 C70,10 150,12 300,10" fill="none" stroke="#9CBE86" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M0,45 C90,45 170,43 300,40 L300,56 L0,56 Z" fill="#4CAF50" opacity="0.85"/>
+          <path d="M0,45 C90,45 170,43 300,40" fill="none" stroke="#2E7D32" stroke-width="2"/>
+        </svg>
+        <span class="pchip pchip--ceil">CEILING: {{PROJECTION_3_CEILING}}</span>
+        <span class="pchip pchip--end" style="background:#2E7D32;color:#fff">{{PROJECTION_3_END}}</span>
+      </div>
+      <div class="paxis"><span>TODAY</span><span>+12 MONTHS</span></div>
+    </div>
+    <div class="projcard">
+      <h4>If nothing changes</h4>
+      <p class="pbasis">{{PROJECTION_4_BASIS — pale line = today's level held; solid band = decline as AI answer boxes take clicks; state the assumed drift rate.}}</p>
+      <div class="pgraph">
+        <svg viewBox="0 0 300 56" preserveAspectRatio="none">
+          <path d="M0,20 L300,20" fill="none" stroke="#E0A9A2" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M0,20 C80,20 160,24 300,30 L300,56 L0,56 Z" fill="#F44336" opacity="0.20"/>
+          <path d="M0,20 C80,20 160,24 300,30" fill="none" stroke="#F44336" stroke-width="2"/>
+        </svg>
+        <span class="pchip pchip--ceil">IF HELD FLAT</span>
+        <span class="pchip pchip--end" style="background:rgba(244,67,54,.14);border:1.5px solid var(--rag-red);color:#B71C1C">{{PROJECTION_4_END}}</span>
+      </div>
+      <div class="paxis"><span>TODAY</span><span>+12 MONTHS</span></div>
+    </div>
+  </div>
+<!-- DATA-SOURCE SMALL PRINT — template carries two variants; render exactly one, chosen by whether GSC/GA4 access was granted at intake.
+     ACTUAL variant (use when GSC/GA4 access granted — projections use real 16-month click history):
+  <p class="mono-label" style="color:var(--green-600)">ACTUAL ANALYTICS DATA — BASELINE FROM GOOGLE SEARCH CONSOLE (16-MONTH CLICK HISTORY) AND GA4. GRAPHS START AT THE REAL MONTHLY FIGURE; PROJECTION RATES FROM PUBLISHED STUDIES, LOWEST RESULT, FURTHER DISCOUNTED.</p>
+-->
+  <p class="mono-label">ESTIMATED ANALYTICS DATA — NO ANALYTICS ACCESS THIS PASS. BASELINE IS MODELED: RANKING POSITION × SEARCH VOLUME × PUBLISHED CLICK-RATE PER POSITION. GRAPHS SHOWN AS AN INDEX (TODAY = 100) UNTIL THE TWO MODEL INPUTS BELOW ARE PULLED; PROJECTION RATES FROM PUBLISHED STUDIES, LOWEST RESULT, FURTHER DISCOUNTED.</p>
+
+  <div class="techblock" style="margin-top:8px;padding:9px 16px">
+    <span class="mono-label mono-label--green">HOW THE ESTIMATE GETS REAL</span>
+    <p style="font-size:8.8px;line-height:1.4">{{ESTIMATE_UPGRADE_PATH — the model formula, the free data pulls that make it exact, and the note that Search Console access (a standard intake question going forward) replaces the model outright with real click history.}}</p>
+  </div>
+
+  <div class="pagefoot"><span class="mono-label">INTERNAL DIAGNOSTIC</span><span class="mono-label">04 / WHY IT MATTERS</span></div>
+</section>
+
+<!-- PAGE 5 · SEO -->
+<section class="page" id="seo">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">SEO · {{SCORE_SEO}}/100</span></div>
+  <h2 class="page-title">{{SEO_HEADLINE}} <span class="rag" style="background:var(--rag-amber)">{{RAG_LABEL_SEO}} · {{SCORE_SEO}}</span></h2>
+
+  <p class="plain">{{SEO_PLAIN — plain-language read of the classic-search surface: what's strong, the one real weakness, why fixing it turns a pile of pages into a library.}}</p>
+
+  <div class="techblock">
+    <span class="mono-label mono-label--green">TECHNICAL</span>
+    <p>{{SEO_TECHNICAL — technical sub-score, security/crawl detail, content & E-E-A-T sub-score with evidence, cluster sub-score with the defect, and the concrete fix.}}</p>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:60px">Priority</th><th>Fix</th><th>Expected effect</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tier tier--bad">P0</span></td><td>{{SEO_FIX_1}}</td><td>{{SEO_FIX_1_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{SEO_FIX_2}}</td><td>{{SEO_FIX_2_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{SEO_FIX_3}}</td><td>{{SEO_FIX_3_EFFECT}}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pagefoot"><span class="mono-label">GREEN ≥ 88 · AMBER 65–87 · RED &lt; 65</span><span class="mono-label">05 / SEO</span></div>
+</section>
+
+<!-- PAGE 6 · AEO + GEO -->
+<section class="page" id="aeo">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">AEO {{SCORE_AEO}} · GEO {{SCORE_GEO}}</span></div>
+  <h2 class="page-title">{{AEO_HEADLINE}} <span class="rag" style="background:var(--rag-amber)">{{RAG_LABEL_AEO}} · {{SCORE_AEO}}</span></h2>
+
+  <p class="plain">{{AEO_PLAIN — plain-language read of the answer-engine surface: what facts the site already holds, where they're hidden vs visible, why fixing it wins answer-box/voice-assistant placement.}}</p>
+
+  <div class="techblock">
+    <span class="mono-label mono-label--green">TECHNICAL</span>
+    <p>{{AEO_TECHNICAL — FAQ/schema state, what's genuinely rare, the deficit, and the concrete fix with markup notes.}}</p>
+  </div>
+
+  <div id="geo" style="margin-top:8px">
+  <h2 style="font-family:var(--serif);font-size:19px;margin:0 0 8px">{{GEO_HEADLINE}} <span class="rag" style="background:var(--rag-amber)">{{RAG_LABEL_GEO}} · {{SCORE_GEO}}</span></h2>
+  <p class="plain">{{GEO_PLAIN — plain-language read of the AI-citation surface: what AI assistants prefer to quote, where this site falls short (entity intro, freshness), and why it's a fast fix with outsized effect on who gets quoted.}}</p>
+
+  <div class="techblock">
+    <span class="mono-label mono-label--green">TECHNICAL</span>
+    <p>{{GEO_TECHNICAL — how GEO score is composed (readiness averaged with schema & entity sub-score), the entity-paragraph fix spec, freshness-signal fixes, remaining schema gaps, and the citation-freshness stat with source.}}</p>
+  </div>
+  </div>
+
+  <table style="margin-top:6px">
+    <thead><tr><th style="width:60px">Priority</th><th>Fix on this surface</th><th>Expected effect</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tier tier--bad">P0</span></td><td>{{AEO_FIX_1}}</td><td>{{AEO_FIX_1_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--bad">P0</span></td><td>{{GEO_FIX_1}}</td><td>{{GEO_FIX_1_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{GEO_FIX_2}}</td><td>{{GEO_FIX_2_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{GEO_FIX_3}}</td><td>{{GEO_FIX_3_EFFECT}}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pagefoot"><span class="mono-label">GREEN ≥ 88 · AMBER 65–87 · RED &lt; 65</span><span class="mono-label">06 / AEO · GEO</span></div>
+</section>
+
+<!-- PAGE 7 · pSEO -->
+<section class="page" id="pseo">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">pSEO · {{SCORE_PSEO}}/100</span></div>
+  <h2 class="page-title">{{PSEO_HEADLINE}} <span class="rag" style="background:var(--rag-amber)">{{RAG_LABEL_PSEO}} · {{SCORE_PSEO}}</span></h2>
+
+  <p class="plain">{{PSEO_PLAIN — plain-language read of the programmatic build: is it the right bet, is it working, the verdict (keep/deepen vs expand), and the one or two concrete flaws.}}</p>
+
+  <div class="techblock">
+    <span class="mono-label mono-label--green">TECHNICAL</span>
+    <p>{{PSEO_TECHNICAL — the four-part viability gate (modifier-matrix demand / defensible data / authority & crawl budget / AI-displacement survival) each with a checkmark and evidence, deductions, actions, and the expansion-gate condition.}}</p>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:170px">Every lever · verdict</th><th style="width:96px">Call</th><th>Reason</th></tr></thead>
+    <tbody>
+      <tr><td class="kw">Editorial clusters</td><td><span class="tier">{{LEVER_EDITORIAL_CALL}}</span></td><td>{{LEVER_EDITORIAL_REASON}}</td></tr>
+      <tr><td class="kw">Programmatic SEO</td><td><span class="tier">{{LEVER_PSEO_CALL}}</span></td><td>{{LEVER_PSEO_REASON}}</td></tr>
+      <tr><td class="kw">Local SEO</td><td><span class="tier tier--mid">{{LEVER_LOCAL_CALL}}</span></td><td>{{LEVER_LOCAL_REASON}}</td></tr>
+      <tr><td class="kw">AEO / GEO</td><td><span class="tier">{{LEVER_AEOGEO_CALL}}</span></td><td>{{LEVER_AEOGEO_REASON}}</td></tr>
+      <tr><td class="kw">Off-page authority</td><td><span class="tier tier--low">{{LEVER_OFFPAGE_CALL}}</span></td><td>{{LEVER_OFFPAGE_REASON — one line; full scored detail on the Backlinks page, p.08}}</td></tr>
+      <tr><td class="kw">Conversion &amp; funnel</td><td><span class="tier tier--mid">{{LEVER_CONVERSION_CALL}}</span></td><td>{{LEVER_CONVERSION_REASON}}</td></tr>
+      <tr><td class="kw">International / hreflang</td><td><span class="tier tier--low">{{LEVER_INTL_CALL}}</span></td><td>{{LEVER_INTL_REASON}}</td></tr>
+      <tr><td class="kw">Image &amp; video SEO</td><td><span class="tier tier--low">{{LEVER_IMAGE_CALL}}</span></td><td>{{LEVER_IMAGE_REASON}}</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:8px;font-size:9px;font-style:italic;color:var(--ink-soft)">Every lever gets a verdict. "Not recommended" is always a decision with evidence, never an omission.</p>
+
+  <table style="margin-top:12px">
+    <thead><tr><th style="width:60px">Priority</th><th>Fix on this surface</th><th>Expected effect</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{PSEO_FIX_1}}</td><td>{{PSEO_FIX_1_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{PSEO_FIX_2}}</td><td>{{PSEO_FIX_2_EFFECT}}</td></tr>
+      <tr><td><span class="tier">P2</span></td><td>{{PSEO_FIX_3}}</td><td>{{PSEO_FIX_3_EFFECT}}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pagefoot"><span class="mono-label">GREEN ≥ 88 · AMBER 65–87 · RED &lt; 65</span><span class="mono-label">07 / pSEO · STRATEGY COVERAGE</span></div>
+</section>
+
+<!-- PAGE 7b · COMPETITOR LANDSCAPE (per business bucket; cut buckets that don't apply) -->
+<section class="page" id="competitors">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">COMPETITOR LANDSCAPE · BY BUSINESS</span></div>
+  <h2 class="page-title">{{COMP_HEADLINE — e.g. "Who's winning your searches, and what to take from them"}}</h2>
+
+  <p class="plain">{{COMP_PLAIN — plain-language: competitors analyzed per business bucket (never blended); lists validated with the owner; every claim below was observed live, not guessed.}}</p>
+
+  <!-- Repeat this block once per bucket -->
+  <h2 style="font-family:var(--serif);font-size:16px;margin:12px 0 6px">{{COMP_BUCKET_1_NAME}}</h2>
+  <table style="margin-bottom:10px">
+    <thead><tr><th>Competitor</th><th style="width:110px">Area</th><th>Beats us on</th><th>Their edge</th></tr></thead>
+    <tbody>
+      <tr><td>{{COMP_1_1}}</td><td>{{COMP_1_1_AREA}}</td><td>{{COMP_1_1_WINS}}</td><td>{{COMP_1_1_EDGE}}</td></tr>
+      <tr><td>{{COMP_1_2}}</td><td>{{COMP_1_2_AREA}}</td><td>{{COMP_1_2_WINS}}</td><td>{{COMP_1_2_EDGE}}</td></tr>
+      <tr><td>{{COMP_1_3}}</td><td>{{COMP_1_3_AREA}}</td><td>{{COMP_1_3_WINS}}</td><td>{{COMP_1_3_EDGE}}</td></tr>
+    </tbody>
+  </table>
+  <div class="techblock">
+    <span class="mono-label mono-label--green">COPY / BEAT / IGNORE</span>
+    <p>{{COMP_BUCKET_1_ACTIONS — 2-4 evidence-backed actions: what to copy from whom (URL seen), what to out-do, what to ignore. Include share-of-wallet note (non-vertical rivals for the same budget) if relevant.}}</p>
+  </div>
+
+  <div class="pagefoot"><span class="mono-label">VALIDATED WITH OWNER · OBSERVED EVIDENCE ONLY</span><span class="mono-label">07b / COMPETITOR LANDSCAPE</span></div>
+</section>
+
+<!-- PAGE 8 · BACKLINKS -->
+<section class="page" id="backlinks">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">BACKLINKS · {{SCORE_BACKLINKS}}/100</span></div>
+  <h2 class="page-title">{{BACKLINKS_HEADLINE}} <span class="rag" style="background:var(--rag-amber)">{{RAG_LABEL_BACKLINKS}} · {{SCORE_BACKLINKS}}</span></h2>
+
+  <p class="plain">{{BACKLINKS_PLAIN — plain-language read of off-page authority: what the site has (domain count, concentration), the one real gap, why it matters most for the newest content specifically.}}</p>
+
+  <div class="techblock">
+    <span class="mono-label mono-label--green">TECHNICAL</span>
+    <p>{{BACKLINKS_TECHNICAL — data source declared (GSC-only / GSC+DataForSEO), total external links, unique referring domains, page coverage %, new-content coverage % with its own denominator and date range, homepage-concentration share, and the scoring composition actually used.}}</p>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:60px">Priority</th><th>Fix</th><th>Expected effect</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tier tier--bad">P0</span></td><td>{{BACKLINKS_FIX_1}}</td><td>{{BACKLINKS_FIX_1_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{BACKLINKS_FIX_2}}</td><td>{{BACKLINKS_FIX_2_EFFECT}}</td></tr>
+      <tr><td><span class="tier tier--warn">P1</span></td><td>{{BACKLINKS_FIX_3}}</td><td>{{BACKLINKS_FIX_3_EFFECT}}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pagefoot"><span class="mono-label">GREEN ≥ 88 · AMBER 65–87 · RED &lt; 65</span><span class="mono-label">08 / BACKLINKS</span></div>
+</section>
+
+<!-- PAGE 9 · AGGREGATE / EVERYTHING ELSE -->
+<section class="page" id="agg">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">ALL OTHER AREAS · IN AGGREGATE {{SCORE_OVERALL}}</span></div>
+  <h2 class="page-title">{{AGG_HEADLINE}} <span class="rag" style="background:var(--rag-amber)">{{RAG_LABEL_OVERALL}} · {{SCORE_OVERALL}}</span></h2>
+
+  <p class="plain">{{AGG_PLAIN — plain-language read of everything behind the scenes: measurement, security, platform hygiene, and the remaining human-level friction.}}</p>
+
+  <div class="techblock">
+    <span class="mono-label mono-label--green">TECHNICAL</span>
+    <p>{{AGG_TECHNICAL — measurement sub-score and what to capture as baseline before any fix ships, security sub-score, conversion-path note, and the explicit not-audited-this-pass list (flagged, not guessed).}}</p>
+  </div>
+
+  <table style="margin-bottom:18px">
+    <thead><tr><th style="width:64px">Order</th><th style="width:100px">Window</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td class="num">{{ROLLOUT_1_WINDOW}}</td><td>{{ROLLOUT_1_ACTION}}</td></tr>
+      <tr><td class="num">2</td><td class="num">{{ROLLOUT_2_WINDOW}}</td><td>{{ROLLOUT_2_ACTION}}</td></tr>
+      <tr><td class="num">3</td><td class="num">{{ROLLOUT_3_WINDOW}}</td><td>{{ROLLOUT_3_ACTION}}</td></tr>
+      <tr><td class="num">4</td><td class="num">{{ROLLOUT_4_WINDOW}}</td><td>{{ROLLOUT_4_ACTION}}</td></tr>
+      <tr><td class="num">5</td><td class="num">Ongoing</td><td>{{ROLLOUT_5_ACTION}}</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin-bottom:14px;font-size:9px;font-style:italic;color:var(--ink-soft)">Machine-readable companion: every fix above exists as a todo with acceptance criteria and a verify command in <code style="font-family:var(--mono);font-size:8.4px;font-style:normal">{{APPENDIX_FILENAME}}</code> — hand that file to an AI implementer.</p>
+
+  <div class="band">
+    <div class="mono-label">The bottom line</div>
+    <p>{{BOTTOM_LINE — 2–3 sentences: what's rare and already done, what's left (copy and links / whatever applies), and the compounding claim. Land the italic on the verb that matters, e.g. <em>cited</em>.}}</p>
+  </div>
+
+  <div class="pagefoot"><span class="mono-label">GREEN ≥ 88 · AMBER 65–87 · RED &lt; 65</span><span class="mono-label">09 / THE REST + THE ORDER</span></div>
+</section>
+
+<!-- PAGE 10 · APPENDIX -->
+<section class="page">
+  <div class="runhead"><span class="mono-label">{{PROPERTY}}</span><span class="mono-label">APPENDIX · IMPLEMENTATION TODOS</span></div>
+  <h2 class="page-title">Appendix: AI implementation brief</h2>
+  <p class="plain" style="font-size:11.8px;margin-bottom:10px">The full technical todo list, in execution order — written for an AI implementer. Feed this page (or the identical file <span style="font-family:var(--mono);font-size:9.5px">{{APPENDIX_FILENAME}}</span>) to an AI session and it can execute immediately: each todo carries its target, acceptance criteria, and a runnable verify command.</p>
+
+  <div class="techblock" style="font-family:var(--mono);font-size:8.3px;line-height:1.5;padding:14px 18px">
+<pre style="white-space:pre-wrap;font-family:inherit;margin:0">{{APPENDIX_MARKDOWN_BODY — the AI implementation brief in full: hard constraints, then numbered todos in execution order, each with a VERIFY line carrying a runnable command. Render byte-identical to the companion .md file.}}</pre>
+  </div>
+
+  <div class="pagefoot"><span class="mono-label">GREEN ≥ 88 · AMBER 65–87 · RED &lt; 65</span><span class="mono-label">10 / APPENDIX</span></div>
+</section>
+
+</body>
+</html>
